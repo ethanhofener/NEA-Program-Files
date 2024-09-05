@@ -12,7 +12,7 @@ import os
 
 # --- Global Settings ---
 # Set main program directory
-main_directory = os.path.join(os.getcwd(), r'OneDrive\Documents\TWGSB\Year 12\Computer Science\Computer Science NEA\NEA Program Files')
+main_directory =  os.path.join(os.environ['USERPROFILE'], 'OneDrive', 'Documents', 'TWGSB', 'Year 12', 'Computer Science', 'Computer Science NEA', 'NEA Program Files')
 db_path = os.path.join(main_directory, 'Users.db')
 
 # --- Shared Functions ---
