@@ -312,7 +312,7 @@ def open_menu_window():
     # Chart Icon
     try:
         chart_icon_image = PhotoImage(file=os.path.join(main_directory, 'chart.png'))
-        chart_button = Button(menu_window, image=chart_icon_image, command=lambda: [menu_window.destroy(), plt.show()], borderwidth=3)
+        chart_button = Button(menu_window, image=chart_icon_image, command=lambda: [menu_window.destroy(), open_chart_window()], borderwidth=3)
         chart_button.pack(pady=20)
         chart_button.place(x=75,y=75)
         menu_window.chart_icon_image = chart_icon_image  # Prevent image from being garbage collected
@@ -361,10 +361,21 @@ def open_menu_window():
 # --- Chart Window ---
 
 def open_chart_window():
-    chart_window = Toplevel(root)
-    chart_window.geometry('1000x1000+460+23')
-    chart_window.title('Main Menu')
-    chart_window.config(bg='#aaaaaa')
+
+    # Create the figure and the plot only for the chart window
+    fig = plt.figure()
+    fig.patch.set_facecolor('#121416')
+    gs = fig.add_gridspec(8, 7)
+    ax1 = fig.add_subplot(gs[0:7, 0:6])
+
+    # Call the figure design function
+    figure_design([ax1])
+
+    # Use plt.show() only when the chart window is opened
+    plt.show()
+
+    # Prevent the window from closing the entire program
+    chart_window.protocol("WM_DELETE_WINDOW", chart_window.destroy)
 
 def figure_design(axs):
     for ax in axs:
