@@ -22,6 +22,8 @@ import datetime
 import math
 import numpy as np
 import matplotlib.widgets as widgets
+from matplotlib.widgets import Button as MplButton
+
 
 # --- Global Settings ---
 # Set main program directory
@@ -367,15 +369,30 @@ def open_chart_window():
     fig.patch.set_facecolor('#121416')
     gs = fig.add_gridspec(8, 7)
     ax1 = fig.add_subplot(gs[0:7, 0:6])
+    plt.subplots_adjust(left=0.07)
 
     # Call the figure design function
     figure_design([ax1])
+    
+
+    #Button to go to chart window
+    ax_button = fig.add_axes([0.8835, 0.028, 0.1, 0.075])  # Positioning for the button inside the plot
+    menu_button = MplButton(ax_button, 'Menu')  # Create the Matplotlib button
+
+    # Define what happens when the button is clicked
+    def on_button_clicked(event):
+        open_menu_window()  
+        plt.close() 
+
+    menu_button.on_clicked(on_button_clicked)
 
     # Use plt.show() only when the chart window is opened
     plt.show()
 
-    # Prevent the window from closing the entire program
-    chart_window.protocol("WM_DELETE_WINDOW", chart_window.destroy)
+
+
+
+
 
 def figure_design(axs):
     for ax in axs:
@@ -402,14 +419,14 @@ password = StringVar()
 
 open_login_window()
 
-fig = plt.figure()
+""" fig = plt.figure()
 fig.patch.set_facecolor('#121416')
 gs = fig.add_gridspec(8, 7)
 ax1 = fig.add_subplot(gs[0:7, 0:6])
 
-figure_design([ax1])
+figure_design([ax1]) """
 
-plt.show()
+open_chart_window()
 
 
 root.mainloop()
