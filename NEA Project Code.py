@@ -312,7 +312,7 @@ def open_menu_window():
     # Chart Icon
     try:
         chart_icon_image = PhotoImage(file=os.path.join(main_directory, 'chart.png'))
-        chart_button = Button(menu_window, image=chart_icon_image, command=lambda: [open_chart_window(), menu_window.destroy()], borderwidth=3)
+        chart_button = Button(menu_window, image=chart_icon_image, command=lambda: [menu_window.destroy(), plt.show()], borderwidth=3)
         chart_button.pack(pady=20)
         chart_button.place(x=75,y=75)
         menu_window.chart_icon_image = chart_icon_image  # Prevent image from being garbage collected
@@ -446,6 +446,6 @@ ax3 = fig.add_subplot(gs[8, 0:6])
 ax4 = fig.add_subplot(gs[9, 0:6])
 figure_design([ax1, ax2, ax3, ax4])
 
-plt.show()
+
 
 root.mainloop()
