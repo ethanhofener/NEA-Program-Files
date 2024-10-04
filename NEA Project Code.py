@@ -366,7 +366,6 @@ def open_chart_window():
     chart_window.title('Main Menu')
     chart_window.config(bg='#aaaaaa')
 
-# --- Window to keep program running (in backround) ---
 def figure_design(axs):
     for ax in axs:
         ax.set_facecolor('#1e1e1e')
@@ -377,58 +376,13 @@ def figure_design(axs):
         ax.spines['left'].set_color('#787878')
         ax.spines['right'].set_color('#787878')
 
-"""
-def plot_x_axis_time(ax, data):
-    xdate = [i for i in data['time']]
-    def mydate(x, pos=None):
-        try:
-            t = xdate[int(x)].strftime('%H:%M')
-            return xdate[int(x)].strftime('%H:%M')
-        except IndexError:
-            return ''
-    ax.xaxis.set_major_formatter(mticker.FuncFormatter(mydate)) """
-
-""" def ax_design(ax, y_axis_visible = False, x_axis_label = False):
-    ax.clear()
-    ax.grid(True, color='grey', linestyle='-', which='major', axis='both', linewidth=0.3)
-
-    if y_axis_visible == False:
-        ax.axes.yaxis.set_visible(y_axis_visible)
-    else:
-        ax.yaxis.set_ticks_position("right")
-
-    if x_axis_label == False:
-        ax.set_xticklabels([])
-    else:
-        ax.tick_params(axis='x', which='major', labelsize=10)
-    ax.set_xticklabels([])
- """
-
-""" def interactive_TA():
-    check = plt.axes([0.07, 0.73, 0.05, 0.1])  # x, y, width, height
-    figure_design([check])
-    check.set_facecolor('#121416')
-
-    # Define colours for rectangles and set them
-    fig, check = plt.subplots()
-    plt.subplots_adjust(left=0.2)
-    labels = ['SMA', 'EMA', 'BB']
-    activated = [True, True, True]
-    plot_button = widgets.CheckButtons(check,labels,activated)
-    def func(label):
-        index = labels.index(label)
-        activated[index] = not activated[index]
-        print(f'{label} state: {activated[index]}')
-
-    plot_button.on_clicked(func)
-    plt.show() """
-
-
-
+# --- Window to keep program running (in backround) ---
 root = Tk()
 root.geometry('0x0')
 root.geometry('+10000+10000')
 root.title("Don't Click")
+
+# ---   ---
 
 name = StringVar()
 email = StringVar()
@@ -439,13 +393,12 @@ open_login_window()
 
 fig = plt.figure()
 fig.patch.set_facecolor('#121416')
-gs = fig.add_gridspec(10, 6)
+gs = fig.add_gridspec(8, 7)
 ax1 = fig.add_subplot(gs[0:7, 0:6])
-ax2 = fig.add_subplot(gs[7, 0:6])
-ax3 = fig.add_subplot(gs[8, 0:6])
-ax4 = fig.add_subplot(gs[9, 0:6])
-figure_design([ax1, ax2, ax3, ax4])
 
+figure_design([ax1])
+
+plt.show()
 
 
 root.mainloop()
