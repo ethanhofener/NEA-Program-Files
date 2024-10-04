@@ -312,7 +312,7 @@ def open_menu_window():
     # Chart Icon
     try:
         chart_icon_image = PhotoImage(file=os.path.join(main_directory, 'chart.png'))
-        chart_button = Button(menu_window, image=chart_icon_image, command='', borderwidth=3)
+        chart_button = Button(menu_window, image=chart_icon_image, command=lambda: [open_chart_window(), menu_window.destroy()], borderwidth=3)
         chart_button.pack(pady=20)
         chart_button.place(x=75,y=75)
         menu_window.chart_icon_image = chart_icon_image  # Prevent image from being garbage collected
@@ -358,7 +358,15 @@ def open_menu_window():
                           command=lambda: [open_login_window(), menu_window.destroy()])
     login_button.place(x=900, y=950) 
 
-# --- Main Window ---
+# --- Chart Window ---
+
+def open_chart_window():
+    chart_window = Toplevel(root)
+    chart_window.geometry('1000x1000+460+23')
+    chart_window.title('Main Menu')
+    chart_window.config(bg='#aaaaaa')
+
+# --- Window to keep program running (in backround) ---
 
 root = Tk()
 root.geometry('0x0')
