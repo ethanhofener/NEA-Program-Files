@@ -8,7 +8,20 @@ import hashlib
 import random
 import asyncio
 import os
-
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+import matplotlib.transforms as transforms
+import matplotlib.ticker as mticker
+from matplotlib.gridspec import GridSpec
+from matplotlib.widgets import CheckButtons
+from mycolorpy import colorlist as mcp
+from mplfinance.original_flavor import candlestick_ohlc
+import pandas as pd
+import pandas_ta as ta
+import datetime
+import math
+import numpy as np
+import matplotlib.widgets as widgets
 
 # --- Global Settings ---
 # Set main program directory
