@@ -393,17 +393,18 @@ def open_chart_window():
     press = None
     cur_xlim = ax1.get_xlim()
     cur_ylim = ax1.get_ylim()
-
-    # Function to handle mouse press for dragging
+    
+    #Commented out moving graph with clicking and dragging
+    """ # Function to handle mouse press for dragging
     def on_press(event):
         nonlocal press, cur_xlim, cur_ylim
         if event.inaxes != ax1:
             return
         press = event.xdata, event.ydata
         cur_xlim = ax1.get_xlim()
-        cur_ylim = ax1.get_ylim()
+        cur_ylim = ax1.get_ylim() """
 
-    # Function to handle dragging movement
+    """     # Function to handle dragging movement
     def on_motion(event):
         if press is None or event.inaxes != ax1:
             return
@@ -414,17 +415,17 @@ def open_chart_window():
         ax1.set_xlim(cur_xlim[0] - dx, cur_xlim[1] - dx)
         ax1.set_ylim(cur_ylim[0] - dy, cur_ylim[1] - dy)
         plt.draw()
-
-    # Function to release the mouse button and stop dragging
+    """
+    """     # Function to release the mouse button and stop dragging
     def on_release(event):
         nonlocal press
         press = None
-        plt.draw()
+        plt.draw() """
 
-    # Connect events to the figure
+    """     # Connect events to the figure
     fig.canvas.mpl_connect('button_press_event', on_press)
     fig.canvas.mpl_connect('motion_notify_event', on_motion)
-    fig.canvas.mpl_connect('button_release_event', on_release)
+    fig.canvas.mpl_connect('button_release_event', on_release) """
 
 # Zoom control variables
     zoom_level = 1.0
