@@ -364,29 +364,30 @@ def open_menu_window():
 
 def open_chart_window():
 
-    # Create the figure and the plot only for the chart window
-    fig = plt.figure()
+    #Create the figure and the plot for the chart window
+    fig = plt.figure(figsize=(10, 10), dpi=100)
     fig.patch.set_facecolor('#121416')
     gs = fig.add_gridspec(8, 7)
     ax1 = fig.add_subplot(gs[0:7, 0:6])
-    plt.subplots_adjust(left=0.07)
+    plt.subplots_adjust(left=0.03)
+    manager = plt.get_current_fig_manager()
+    manager.full_screen_toggle()
 
-    # Call the figure design function
+    #Call the figure design function
     figure_design([ax1])
     
 
     #Button to go to chart window
-    ax_button = fig.add_axes([0.8835, 0.028, 0.1, 0.075])  # Positioning for the button inside the plot
+    ax_button = fig.add_axes([0.935, 0.028, 0.05, 0.05])  # x, y, width, height
     menu_button = MplButton(ax_button, 'Menu')  # Create the Matplotlib button
 
-    # Define what happens when the button is clicked
+    #Define what happens when the button is clicked
     def on_button_clicked(event):
         open_menu_window()  
         plt.close() 
 
     menu_button.on_clicked(on_button_clicked)
 
-    # Use plt.show() only when the chart window is opened
     plt.show()
 
 
