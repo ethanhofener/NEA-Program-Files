@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import matplotlib.transforms as transforms
 import matplotlib.ticker as mticker
+import matplotlib.dates as mdates
 from matplotlib.gridspec import GridSpec
 from matplotlib.widgets import CheckButtons
 from mycolorpy import colorlist as mcp
@@ -23,6 +24,7 @@ import math
 import numpy as np
 import matplotlib.widgets as widgets
 from matplotlib.widgets import Button as MplButton
+from datetime import datetime, timedelta
 
 
 # --- Global Settings ---
@@ -363,8 +365,7 @@ def open_menu_window():
 # --- Chart Window ---
 
 def open_chart_window():
-
-    #Create the figure and the plot for the chart window
+    # Create the figure and the plot for the chart window
     fig = plt.figure(figsize=(10, 10), dpi=100)
     fig.patch.set_facecolor('#121416')
     gs = fig.add_gridspec(8, 7)
@@ -373,14 +374,26 @@ def open_chart_window():
     manager = plt.get_current_fig_manager()
     manager.full_screen_toggle()
 
-    #Call the figure design function
+    # Generate some example time-series data for demonstration
+    now = datetime.now()
+    dates = [now + timedelta(days=i) for i in range(10)]  # 10 days range
+    values = [i**2 for i in range(10)]  # Example values
+
+    # Plot the data with date and time on x-axis
+    ax1.plot(dates, values, label="Sample Data", color='lightblue')
+
+    # Set date format and locator for x-axis
+    ax1.xaxis.set_major_locator(mdates.AutoDateLocator())
+    ax1.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d %H:%M'))
+
+    # Call the figure design function
     figure_design([ax1])
-    
-    #Button to go to menu window
+
+    # Button to go to menu window
     ax_button = fig.add_axes([0.935, 0.028, 0.05, 0.05])  # x, y, width, height
     menu_button = MplButton(ax_button, 'Menu')
 
-    #Button to go to chart settings
+    # Button to go to chart settings
     ax_button = fig.add_axes([0.015, 0.028, 0.075, 0.05])  # x, y, width, height
     chart_settings_button = MplButton(ax_button, 'Chart Settings')
 
@@ -393,37 +406,37 @@ def open_chart_window():
             chart_settings_window.title('Chart settings')
             chart_settings_window.config(bg='#aaaaaa')
         else:
-            #If the window is already open destroy it
+            # If the window is already open, destroy it
             print("Chart Settings window is already open")
             chart_settings_window.destroy()
 
-    #Define what happens when the menu button is clicked
-    def on_button_clicked(event):
-        open_menu_window()  
-        plt.close() 
-    menu_button.on_clicked(on_button_clicked)
+    # Define what happens when the menu button is clicked
+    def on_menu_button_clicked(event):
+        open_menu_window()
+        plt.close()
 
-    #Define what happens when the chart settings button is clicked
-    def on_button_clicked(event):
-        open_chart_settings_window()   
-    chart_settings_button.on_clicked(on_button_clicked)
+    menu_button.on_clicked(on_menu_button_clicked)
+
+    # Define what happens when the chart settings button is clicked
+    def on_chart_settings_button_clicked(event):
+        open_chart_settings_window()
+
+    chart_settings_button.on_clicked(on_chart_settings_button_clicked)
 
     plt.show()
-
-
-
-
-
 
 def figure_design(axs):
     for ax in axs:
         ax.set_facecolor('#1e1e1e')
         ax.tick_params(axis='both', labelsize=14, colors='#e4e4e4')
-        ax.ticklabel_format(useOffset=False)
         ax.spines['bottom'].set_color('#787878')
         ax.spines['top'].set_color('#787878')
         ax.spines['left'].set_color('#787878')
         ax.spines['right'].set_color('#787878')
+
+        # Rotate and format the date labels for better readability
+        plt.setp(ax.xaxis.get_majorticklabels(), rotation=45, ha="right")
+
 
 # --- Window to keep program running (in backround) ---
 root = Tk()
