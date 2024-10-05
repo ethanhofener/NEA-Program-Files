@@ -389,6 +389,63 @@ def open_chart_window():
     # Call the figure design function
     figure_design([ax1])
 
+
+
+# Zoom control variables
+    zoom_level = 1.0
+    ctrl_pressed = False
+
+    # Function to check key press and update zooming
+    def on_key_press(event):
+        nonlocal ctrl_pressed
+        if event.key == 'control':
+            ctrl_pressed = True
+
+    # Function to check key release
+    def on_key_release(event):
+        nonlocal ctrl_pressed
+        if event.key == 'control':
+            ctrl_pressed = False
+
+    # Function to handle scroll events
+    def on_scroll(event):
+        nonlocal zoom_level
+        base_scale = 1.1  # Define the base zoom scale
+
+        if ctrl_pressed:  # Check if the Ctrl key is pressed
+            if event.button == 'up':
+                # Zoom in
+                scale_factor = 1 / base_scale
+            elif event.button == 'down':
+                # Zoom out
+                scale_factor = base_scale
+            else:
+                return
+
+            # Get the current axis limits
+            cur_xlim = ax1.get_xlim()
+            cur_ylim = ax1.get_ylim()
+
+            # Compute new limits
+            x_center = (cur_xlim[0] + cur_xlim[1]) / 2
+            y_center = (cur_ylim[0] + cur_ylim[1]) / 2
+            new_width = (cur_xlim[1] - cur_xlim[0]) * scale_factor
+            new_height = (cur_ylim[1] - cur_ylim[0]) * scale_factor
+
+            # Set new limits based on zoom level
+            ax1.set_xlim([x_center - new_width / 2, x_center + new_width / 2])
+            ax1.set_ylim([y_center - new_height / 2, y_center + new_height / 2])
+
+            # Redraw the plot to apply the new limits
+            plt.draw()
+
+    # Connect the events to the figure
+    fig.canvas.mpl_connect('key_press_event', on_key_press)
+    fig.canvas.mpl_connect('key_release_event', on_key_release)
+    fig.canvas.mpl_connect('scroll_event', on_scroll)
+
+
+
     #Labels of axes
 
     plt.xlabel("Time", fontdict={'family':'serif','color':'white','size':20})
