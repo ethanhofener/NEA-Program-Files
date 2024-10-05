@@ -389,22 +389,10 @@ def open_chart_window():
     # Call the figure design function
     figure_design([ax1])
 
-    # Add dotted lines (crosshair)
-    hline = ax1.axhline(y=0, color='white', linestyle='--', lw=0.75)
-    vline = ax1.axvline(x=0, color='white', linestyle='--', lw=0.75)
-
     # Variables to store the drag state
     press = None
     cur_xlim = ax1.get_xlim()
     cur_ylim = ax1.get_ylim()
-
-    # Function to update the crosshairs
-    def update_crosshairs(event):
-        if event.inaxes != ax1:
-            return
-        hline.set_ydata([event.ydata, event.ydata])
-        vline.set_xdata([event.xdata, event.xdata])
-        plt.draw()
 
     # Function to handle mouse press for dragging
     def on_press(event):
@@ -434,7 +422,6 @@ def open_chart_window():
         plt.draw()
 
     # Connect events to the figure
-    fig.canvas.mpl_connect('motion_notify_event', update_crosshairs)
     fig.canvas.mpl_connect('button_press_event', on_press)
     fig.canvas.mpl_connect('motion_notify_event', on_motion)
     fig.canvas.mpl_connect('button_release_event', on_release)
