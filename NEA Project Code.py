@@ -370,24 +370,29 @@ def open_chart_window():
     fig.patch.set_facecolor('#121416')
     gs = fig.add_gridspec(8, 7)
     ax1 = fig.add_subplot(gs[0:7, 0:6])
-    plt.subplots_adjust(left=0.03)
+    plt.subplots_adjust(left=0.05)
     manager = plt.get_current_fig_manager()
     manager.full_screen_toggle()
 
     # Generate some example time-series data for demonstration
     now = datetime.now()
     dates = [now + timedelta(days=i) for i in range(10)]  # 10 days range
-    values = [i**2 for i in range(10)]  # Example values
+    values = [i**2 for i in range(10)] 
 
-    # Plot the data with date and time on x-axis
+    # Plot example data
     ax1.plot(dates, values, label="Sample Data", color='lightblue')
 
     # Set date format and locator for x-axis
     ax1.xaxis.set_major_locator(mdates.AutoDateLocator())
-    ax1.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d %H:%M'))
+    ax1.xaxis.set_major_formatter(mdates.DateFormatter('%a %d %b \'%y %H:%M'))
 
     # Call the figure design function
     figure_design([ax1])
+
+    #Labels of axes
+
+    plt.xlabel("Time", fontdict={'family':'serif','color':'white','size':20})
+    plt.ylabel("Price", fontdict={'family':'serif','color':'white','size':20})
 
     # Button to go to menu window
     ax_button = fig.add_axes([0.935, 0.028, 0.05, 0.05])  # x, y, width, height
@@ -422,6 +427,10 @@ def open_chart_window():
         open_chart_settings_window()
 
     chart_settings_button.on_clicked(on_chart_settings_button_clicked)
+
+
+
+
 
     plt.show()
 
