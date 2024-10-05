@@ -376,17 +376,37 @@ def open_chart_window():
     #Call the figure design function
     figure_design([ax1])
     
-
-    #Button to go to chart window
+    #Button to go to menu window
     ax_button = fig.add_axes([0.935, 0.028, 0.05, 0.05])  # x, y, width, height
-    menu_button = MplButton(ax_button, 'Menu')  # Create the Matplotlib button
+    menu_button = MplButton(ax_button, 'Menu')
 
-    #Define what happens when the button is clicked
+    #Button to go to chart settings
+    ax_button = fig.add_axes([0.015, 0.028, 0.075, 0.05])  # x, y, width, height
+    chart_settings_button = MplButton(ax_button, 'Chart Settings')
+
+    def open_chart_settings_window():
+        chart_settings_window = None
+        if chart_settings_window is None or not chart_settings_window.winfo_exists():
+            # If no window exists, create a new one
+            chart_settings_window = Toplevel(root)
+            chart_settings_window.geometry('500x300+710+250')
+            chart_settings_window.title('Chart settings')
+            chart_settings_window.config(bg='#aaaaaa')
+        else:
+            #If the window is already open destroy it
+            print("Chart Settings window is already open")
+            chart_settings_window.destroy()
+
+    #Define what happens when the menu button is clicked
     def on_button_clicked(event):
         open_menu_window()  
         plt.close() 
-
     menu_button.on_clicked(on_button_clicked)
+
+    #Define what happens when the chart settings button is clicked
+    def on_button_clicked(event):
+        open_chart_settings_window()   
+    chart_settings_button.on_clicked(on_button_clicked)
 
     plt.show()
 
