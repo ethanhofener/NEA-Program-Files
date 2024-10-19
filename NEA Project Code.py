@@ -379,11 +379,19 @@ def open_chart_window():
 
     # Generate some example time-series data for demonstration
     now = datetime.now()
-    dates = [now + timedelta(days=i) for i in range(100)]  # 100 days range
-    values = [(i*2 + random.randint(0,100)) for i in range(100)] 
+    dates = [now + timedelta(minutes=i) for i in range(1000)]  # 1000 min range
+    values = [(i*random.randint(1,3) + random.randint(0,100)) for i in range(1000)] 
 
-    # Plot example data
-    ax1.plot(dates, values, label="Sample Data", color='lightblue')
+    """# Plot example data
+    ax1.plot(dates, values, label="Sample Data", color='lightblue')"""
+
+    # Plot the initial data (empty line)
+    line, = ax1.plot([], [], lw=2, color='lightblue')
+
+    # Set up plot parameters
+    ax1.set_xlim(dates[0], dates[-1])
+    ax1.set_ylim(min(values), max(values))
+
 
     # Set date format and locator for x-axis
     ax1.xaxis.set_major_locator(mdates.AutoDateLocator())
@@ -392,44 +400,35 @@ def open_chart_window():
     # Call the figure design function
     figure_design([ax1])
 
-    """
-    # Variables to store the drag state
-    press = None
-    cur_xlim = ax1.get_xlim()
-    cur_ylim = ax1.get_ylim()
+    # Initialize blitting by storing the background
+    background = fig.canvas.copy_from_bbox(ax1.bbox)
     
-    #Commented out moving graph with clicking and dragging
-     # Function to handle mouse press for dragging
-    def on_press(event):
-        nonlocal press, cur_xlim, cur_ylim
-        if event.inaxes != ax1:
-            return
-        press = event.xdata, event.ydata
-        cur_xlim = ax1.get_xlim()
-        cur_ylim = ax1.get_ylim() """
+    # Initialization function for the animation
+    def init():
+        line.set_data([], [])
+        return line,
 
-    """     # Function to handle dragging movement
-    def on_motion(event):
-        if press is None or event.inaxes != ax1:
-            return
-        dx = event.xdata - press[0]
-        dy = event.ydata - press[1]
 
-        # Shift the x and y limits
-        ax1.set_xlim(cur_xlim[0] - dx, cur_xlim[1] - dx)
-        ax1.set_ylim(cur_ylim[0] - dy, cur_ylim[1] - dy)
-        plt.draw()
-    """
-    """     # Function to release the mouse button and stop dragging
-    def on_release(event):
-        nonlocal press
-        press = None
-        plt.draw() """
+    # Animation function
+    def update(frame):
+        # Restore the background saved earlier
+        fig.canvas.restore_region(background)
+        
+        # Update the line with new data
+        line.set_data(dates[:frame], values[:frame])
 
-    """     # Connect events to the figure
-    fig.canvas.mpl_connect('button_press_event', on_press)
-    fig.canvas.mpl_connect('motion_notify_event', on_motion)
-    fig.canvas.mpl_connect('button_release_event', on_release) """
+        # Redraw only the parts that have changed
+        ax1.draw_artist(line)
+
+        # Update the canvas with the changed parts
+        fig.canvas.blit(ax1.bbox)
+
+        return line,
+
+    # Use FuncAnimation to animate the plot with blitting enabled
+    ani = animation.FuncAnimation(
+        fig, update, frames=len(dates), init_func=init, interval=30, blit=True, repeat=False
+    )
 
 # Zoom control variables
     zoom_level = 1.0
