@@ -16,6 +16,7 @@ import matplotlib.dates as mdates
 from matplotlib.gridspec import GridSpec
 from matplotlib.widgets import CheckButtons
 from mycolorpy import colorlist as mcp
+import mplfinance as mpf
 from mplfinance.original_flavor import candlestick_ohlc
 import pandas as pd
 import pandas_ta as ta
@@ -25,6 +26,7 @@ import numpy as np
 import matplotlib.widgets as widgets
 from matplotlib.widgets import Button as MplButton
 from datetime import datetime, timedelta
+import yfinance as yf
 
 
 # --- Global Settings ---
