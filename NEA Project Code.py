@@ -32,6 +32,9 @@ from datetime import datetime, timedelta
 main_directory =  os.path.join(os.environ['USERPROFILE'], 'OneDrive', 'Documents', 'TWGSB', 'Year 12', 'Computer Science', 'Computer Science NEA', 'NEA Program Files')
 db_path = os.path.join(main_directory, 'Users.db')
 
+# State variables 
+chart_settings_window_open = False
+
 # --- Shared Functions ---
 
 # Sample Data for Autofill
@@ -376,8 +379,8 @@ def open_chart_window():
 
     # Generate some example time-series data for demonstration
     now = datetime.now()
-    dates = [now + timedelta(days=i) for i in range(10)]  # 10 days range
-    values = [i**2 for i in range(10)] 
+    dates = [now + timedelta(days=i) for i in range(100)]  # 100 days range
+    values = [(i*2 + random.randint(0,100)) for i in range(100)] 
 
     # Plot example data
     ax1.plot(dates, values, label="Sample Data", color='lightblue')
@@ -389,13 +392,14 @@ def open_chart_window():
     # Call the figure design function
     figure_design([ax1])
 
+    """
     # Variables to store the drag state
     press = None
     cur_xlim = ax1.get_xlim()
     cur_ylim = ax1.get_ylim()
     
     #Commented out moving graph with clicking and dragging
-    """ # Function to handle mouse press for dragging
+     # Function to handle mouse press for dragging
     def on_press(event):
         nonlocal press, cur_xlim, cur_ylim
         if event.inaxes != ax1:
@@ -495,17 +499,19 @@ def open_chart_window():
     chart_settings_button = MplButton(ax_button, 'Chart Settings')
 
     def open_chart_settings_window():
-        chart_settings_window = None
-        if chart_settings_window is None or not chart_settings_window.winfo_exists():
-            # If no window exists, create a new one
+        global chart_settings_window_open
+        if chart_settings_window_open == False:
             chart_settings_window = Toplevel(root)
             chart_settings_window.geometry('500x300+710+250')
             chart_settings_window.title('Chart settings')
             chart_settings_window.config(bg='#aaaaaa')
-        else:
-            # If the window is already open, destroy it
-            print("Chart Settings window is already open")
-            chart_settings_window.destroy()
+            chart_settings_window_open = True
+            def callback():
+                chart_settings_window.destroy()
+                global chart_settings_window_open
+                chart_settings_window_open = False
+            chart_settings_window.protocol("WM_DELETE_WINDOW", callback)
+
 
     # Define what happens when the menu button is clicked
     def on_menu_button_clicked(event):
