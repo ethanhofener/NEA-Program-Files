@@ -369,6 +369,9 @@ def open_menu_window():
 
 # --- Chart Window ---
 
+
+data = pd.DataFrame()
+
 def open_chart_window():
     # Create the figure and the plot for the chart window
     fig = plt.figure(figsize=(10, 10), dpi=100)
@@ -379,20 +382,97 @@ def open_chart_window():
     manager = plt.get_current_fig_manager()
     manager.full_screen_toggle()
 
-    # Generate some example time-series data for demonstration
-    now = datetime.now()
-    dates = [now + timedelta(minutes=i) for i in range(1000)]  # 1000 min range
-    values = [(i*random.randint(1,3) + random.randint(0,100)) for i in range(1000)] 
 
-    """# Plot example data
-    ax1.plot(dates, values, label="Sample Data", color='lightblue')"""
 
-    # Plot the initial data (empty line)
-    line, = ax1.plot([], [], lw=2, color='lightblue')
 
-    # Set up plot parameters
-    ax1.set_xlim(dates[0], dates[-1])
-    ax1.set_ylim(min(values), max(values))
+
+    # Stock ticker symbol (e.g., 'AAPL' for Apple)
+    ticker_symbol = 'AAPL'
+
+    # Create a function to fetch real-time data from Yahoo Finance
+    def fetch_data():
+        # Fetch the latest 1 day's worth of OHLC data with a 1-minute interval
+        stock_data = yf.download(tickers=ticker_symbol, period='1d', interval='1m')
+    
+        # Check if data is being fetched
+        if stock_data.empty:
+            print("No data fetched from Yahoo Finance. Please check your ticker symbol or internet connection.")
+        
+        # Filter only the required OHLC columns
+        stock_data = stock_data[['Open', 'High', 'Low', 'Close']]
+    
+        # Ensure the index is a DatetimeIndex
+        stock_data.index = pd.to_datetime(stock_data.index)
+    
+        return stock_data
+
+    data = fetch_data()
+
+    # Check if data is empty at the start
+    if data.empty:
+        print("No initial data fetched. Exiting...")
+        exit()
+
+
+    def update_data():
+        global data
+
+        new_data = fetch_data()
+
+        if new_data.empty:
+            print("No new data fetched")
+        else:
+            print("New data fetched:")
+            print(new_data.tail())  # Print the latest fetched data for verification
+
+        data = pd.concat([data, new_data]).drop_duplicates()
+        data.index = pd.to_datetime(data.index)
+
+
+
+    # Function to update the plot
+    def animate(i):
+        update_data()  # Fetch and update with new data
+
+        if not data.empty:
+            ax1.clear()  # Clear the previous plot
+        
+            # Convert the index to a numeric date format for plotting
+            ohlc_data = data.reset_index()
+            ohlc_data['Date'] = mdates.date2num(ohlc_data['Datetime'])
+            ohlc = ohlc_data[['Date', 'Open', 'High', 'Low', 'Close']].values
+
+            # Plot the candlestick chart
+            candlestick_ohlc(ax1, ohlc, width=0.0005, colorup='green', colordown='red')
+
+
+            # Redraw with the updated data
+            fig.canvas.draw()
+
+        else:
+            print("No data available to plot.")
+
+    # Call the animation function
+    ani = animation.FuncAnimation(fig, animate, interval=60000)  # Update every 60 seconds
+
+
+
+
+
+    # # Generate some example time-series data for demonstration
+    # now = datetime.now()
+    # dates = [now + timedelta(minutes=i) for i in range(1000)]  # 1000 min range
+    # values = [(i*random.randint(1,3) + random.randint(0,100)) for i in range(1000)] 
+
+    # # Plot example data
+    # ax1.plot(dates, values, label="Sample Data", color='lightblue')
+
+    # # Plot the initial data (empty line)
+    # line, = ax1.plot([], [], lw=2, color='lightblue')
+
+    # # Set up plot parameters
+    # ax1.set_xlim(dates[0], dates[-1])
+    # ax1.set_ylim(min(values), max(values))
 
 
     # Set date format and locator for x-axis
@@ -402,16 +482,16 @@ def open_chart_window():
     # Call the figure design function
     figure_design([ax1])
 
-    # Initialize blitting by storing the background
-    background = fig.canvas.copy_from_bbox(ax1.bbox)
+    # # Initialize blitting by storing the background
+    # background = fig.canvas.copy_from_bbox(ax1.bbox)
     
     # Initialization function for the animation
-    def init():
+    """def init():
         line.set_data([], [])
-        return line,
+        return line,"""
 
 
-    # Animation function
+    """# Animation function
     def update(frame):
         # Restore the background saved earlier
         fig.canvas.restore_region(background)
@@ -431,7 +511,7 @@ def open_chart_window():
     ani = animation.FuncAnimation(
         fig, update, frames=len(dates), init_func=init, interval=30, blit=True, repeat=False
     )
-
+    """
 # Zoom control variables
     zoom_level = 1.0
     ctrl_pressed = False
