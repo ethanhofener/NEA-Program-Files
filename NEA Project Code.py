@@ -304,7 +304,7 @@ def open_login_window():
 
 def open_menu_window():
     menu_window = Toplevel(root)
-    menu_window.geometry('1000x1000+460+23')
+    menu_window.geometry('512x547+720+160')
     menu_window.title('Main Menu')
     menu_window.config(bg='#aaaaaa')
     
@@ -323,7 +323,7 @@ def open_menu_window():
         chart_icon_image = PhotoImage(file=os.path.join(main_directory, 'chart.png'))
         chart_button = Button(menu_window, image=chart_icon_image, command=lambda: [menu_window.destroy(), open_chart_window()], borderwidth=3)
         chart_button.pack(pady=20)
-        chart_button.place(x=75,y=75)
+        chart_button.place(x=40,y=75)
         menu_window.chart_icon_image = chart_icon_image  # Prevent image from being garbage collected
     except Exception as e:
         tkinter.messagebox.showerror("Error", f"Failed to load chart icon: {e}")
@@ -333,7 +333,7 @@ def open_menu_window():
         indicators_icon_image = PhotoImage(file=os.path.join(main_directory, 'indicators.png'))
         indicators_button = Button(menu_window, image=indicators_icon_image, command='', borderwidth=3)
         indicators_button.pack(pady=20)
-        indicators_button.place(x=525,y=75)
+        indicators_button.place(x=262,y=75)
         menu_window.indicators_icon_image = indicators_icon_image  # Prevent image from being garbage collected
     except Exception as e:
         tkinter.messagebox.showerror("Error", f"Failed to load indicators icon: {e}")
@@ -343,7 +343,7 @@ def open_menu_window():
         aichatbot_icon_image = PhotoImage(file=os.path.join(main_directory, 'aichatbot.png'))
         aichatbot_button = Button(menu_window, image=aichatbot_icon_image, command='', borderwidth=3)
         aichatbot_button.pack(pady=20)
-        aichatbot_button.place(x=75,y=525)
+        aichatbot_button.place(x=40,y=297)
         menu_window.aichatbot_icon_image = aichatbot_icon_image  # Prevent image from being garbage collected
     except Exception as e:
         tkinter.messagebox.showerror("Error", f"Failed to load aichatbot icon: {e}")
@@ -353,7 +353,7 @@ def open_menu_window():
         settings_icon_image = PhotoImage(file=os.path.join(main_directory, 'settings.png'))
         settings_button = Button(menu_window, image=settings_icon_image, command='', borderwidth=3)
         settings_button.pack(pady=20)
-        settings_button.place(x=525,y=525)
+        settings_button.place(x=262,y=297)
         menu_window.settings_icon_image = settings_icon_image  # Prevent image from being garbage collected
     except Exception as e:
         tkinter.messagebox.showerror("Error", f"Failed to load settings icon: {e}")
@@ -365,7 +365,7 @@ def open_menu_window():
                           bg='#555555',
                           fg='white',
                           command=lambda: [open_login_window(), menu_window.destroy()])
-    login_button.place(x=900, y=950) 
+    login_button.place(x=420, y=510) 
 
 # --- Chart Window ---
 
@@ -387,12 +387,12 @@ def open_chart_window():
 
 
     # Stock ticker symbol (e.g., 'AAPL' for Apple)
-    ticker_symbol = 'NVDA'
+    ticker_symbol = 'AMZN'
 
     # Create a function to fetch real-time data from Yahoo Finance
     def fetch_data():
         # Fetch the latest 1 day's worth of OHLC data with a 1-minute interval
-        stock_data = yf.download(tickers=ticker_symbol, period='1mo', interval='1h')
+        stock_data = yf.download(tickers=ticker_symbol, period='1d', interval='1m')
     
         # Check if data is being fetched
         if stock_data.empty:
@@ -664,6 +664,6 @@ ax1 = fig.add_subplot(gs[0:7, 0:6])
 figure_design([ax1]) """
 
 open_chart_window()
-
+open_menu_window()
 
 root.mainloop()
