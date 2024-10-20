@@ -387,12 +387,12 @@ def open_chart_window():
 
 
     # Stock ticker symbol (e.g., 'AAPL' for Apple)
-    ticker_symbol = 'AAPL'
+    ticker_symbol = 'NVDA'
 
     # Create a function to fetch real-time data from Yahoo Finance
     def fetch_data():
         # Fetch the latest 1 day's worth of OHLC data with a 1-minute interval
-        stock_data = yf.download(tickers=ticker_symbol, period='1d', interval='1m')
+        stock_data = yf.download(tickers=ticker_symbol, period='1mo', interval='1h')
     
         # Check if data is being fetched
         if stock_data.empty:
@@ -445,6 +445,20 @@ def open_chart_window():
             # Plot the candlestick chart
             candlestick_ohlc(ax1, ohlc, width=0.0005, colorup='green', colordown='red')
 
+            # Set date format and locator for x-axis
+            ax1.xaxis.set_major_locator(mdates.AutoDateLocator())
+            ax1.xaxis.set_major_formatter(mdates.DateFormatter('%a %d %b \'%y %H:%M'))
+            fig.autofmt_xdate()
+
+            
+            figure_design([ax1])
+
+            # Labels of axes
+            plt.sca(ax1)
+            plt.xlabel("Time", fontdict={'family':'serif','color':'white','size':20})
+            plt.ylabel("Price", fontdict={'family':'serif','color':'white','size':20})
+
+
 
             # Redraw with the updated data
             fig.canvas.draw()
@@ -475,12 +489,12 @@ def open_chart_window():
     # ax1.set_ylim(min(values), max(values))
 
 
-    # Set date format and locator for x-axis
-    ax1.xaxis.set_major_locator(mdates.AutoDateLocator())
-    ax1.xaxis.set_major_formatter(mdates.DateFormatter('%a %d %b \'%y %H:%M'))
+    # # Set date format and locator for x-axis
+    # ax1.xaxis.set_major_locator(mdates.AutoDateLocator())
+    # ax1.xaxis.set_major_formatter(mdates.DateFormatter('%a %d %b \'%y %H:%M'))
 
-    # Call the figure design function
-    figure_design([ax1])
+    # # Call the figure design function
+    # figure_design([ax1])
 
     # # Initialize blitting by storing the background
     # background = fig.canvas.copy_from_bbox(ax1.bbox)
@@ -567,9 +581,9 @@ def open_chart_window():
 
 
 
-    # Labels of axes
-    plt.xlabel("Time", fontdict={'family':'serif','color':'white','size':20})
-    plt.ylabel("Price", fontdict={'family':'serif','color':'white','size':20})
+    # # Labels of axes
+    # plt.xlabel("Time", fontdict={'family':'serif','color':'white','size':20})
+    # plt.ylabel("Price", fontdict={'family':'serif','color':'white','size':20})
 
     # Button to go to menu window
     ax_button = fig.add_axes([0.935, 0.028, 0.05, 0.05])  # x, y, width, height
@@ -617,10 +631,11 @@ def figure_design(axs):
     for ax in axs:
         ax.set_facecolor('#1e1e1e')
         ax.tick_params(axis='both', labelsize=14, colors='#e4e4e4')
-        ax.spines['bottom'].set_color('#787878')
-        ax.spines['top'].set_color('#787878')
-        ax.spines['left'].set_color('#787878')
-        ax.spines['right'].set_color('#787878')
+        ax.spines['bottom'].set_color('#000000')
+        ax.spines['top'].set_color('#000000')
+        ax.spines['left'].set_color('#000000')
+        ax.spines['right'].set_color('#000000')
+    
 
         # Rotate and format the date labels for better readability
         plt.setp(ax.xaxis.get_majorticklabels(), rotation=45, ha="right")
