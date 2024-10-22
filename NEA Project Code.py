@@ -15,6 +15,7 @@ import matplotlib.ticker as mticker
 import matplotlib.dates as mdates
 from matplotlib.gridspec import GridSpec
 from matplotlib.widgets import CheckButtons
+from matplotlib.widgets import TextBox
 from mycolorpy import colorlist as mcp
 import mplfinance as mpf
 from mplfinance.original_flavor import candlestick_ohlc
@@ -614,6 +615,43 @@ def open_chart_window():
         plt.close()
 
     menu_button.on_clicked(on_menu_button_clicked)
+
+
+
+
+
+
+
+    # Add a stock search bar
+    def search_stock():
+        # Get the stock ticker symbol from the TextBox and convert it to uppercase
+        ticker_symbol = stock_entry.text.upper()  # Use 'stock_entry.text' to retrieve the entered text
+        print(f"Ticker Symbol entered: {ticker_symbol}")
+    
+        data = fetch_data()  # Fetch the new stock data for the updated ticker symbol
+        if not data.empty:
+            print(f"Fetched data for {ticker_symbol}")
+        else:
+            print(f"Failed to fetch data for {ticker_symbol}")
+
+    # Create a stock search input and button
+    ax_stock_entry = fig.add_axes([0.35, 0.028, 0.25, 0.05])  # x, y, width, height for entry box
+    stock_entry = widgets.TextBox(ax_stock_entry, "Enter Stock:", initial=ticker_symbol)
+    ax_search_button = fig.add_axes([0.625, 0.028, 0.075, 0.05])  # x, y, width, height for search button
+    search_button = MplButton(ax_search_button, 'Search')
+
+    # Define what happens when the search button is clicked
+    def on_search_button_clicked(event):
+        search_stock()
+
+    search_button.on_clicked(on_search_button_clicked)
+
+
+
+
+
+
+
 
     # Define what happens when the chart settings button is clicked
     def on_chart_settings_button_clicked(event):
