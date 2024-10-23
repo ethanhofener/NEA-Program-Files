@@ -387,17 +387,20 @@ def open_chart_window():
 
 
 
-    # Stock ticker symbol (e.g., 'AAPL' for Apple)
+    # Stock ticker symbol (e.g., 'AMZN' for A)
+    global ticker_symbol
     ticker_symbol = 'AMZN'
 
     # Create a function to fetch real-time data from Yahoo Finance
     def fetch_data():
         # Fetch the latest 1 day's worth of OHLC data with a 1-minute interval
         stock_data = yf.download(tickers=ticker_symbol, period='1d', interval='1m')
+        print(ticker_symbol)
     
         # Check if data is being fetched
         if stock_data.empty:
             print("No data fetched from Yahoo Finance. Please check your ticker symbol or internet connection.")
+            return stock_data
         
         # Filter only the required OHLC columns
         stock_data = stock_data[['Open', 'High', 'Low', 'Close']]
@@ -411,8 +414,8 @@ def open_chart_window():
 
     # Check if data is empty at the start
     if data.empty:
-        print("No initial data fetched. Exiting...")
-        exit()
+        print("No initial data fetched.")
+        pass
 
 
     def update_data():
@@ -434,6 +437,7 @@ def open_chart_window():
     # Function to update the plot
     def animate(i):
         update_data()  # Fetch and update with new data
+        print(data)
 
         if not data.empty:
             ax1.clear()  # Clear the previous plot
@@ -625,6 +629,7 @@ def open_chart_window():
     # Add a stock search bar
     def search_stock():
         # Get the stock ticker symbol from the TextBox and convert it to uppercase
+        global ticker_symbol
         ticker_symbol = stock_entry.text.upper()  # Use 'stock_entry.text' to retrieve the entered text
         print(f"Ticker Symbol entered: {ticker_symbol}")
     
