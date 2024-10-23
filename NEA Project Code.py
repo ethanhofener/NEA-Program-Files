@@ -408,9 +408,12 @@ def open_chart_window():
         # Ensure the index is a DatetimeIndex
         stock_data.index = pd.to_datetime(stock_data.index)
     
+        ### DEBUG
+        print("Inside function:")
+        print(stock_data)
         return stock_data
 
-    data = fetch_data()
+    data = fetch_data().copy()
 
     # Check if data is empty at the start
     if data.empty:
@@ -421,23 +424,25 @@ def open_chart_window():
     def update_data():
         global data
 
-        new_data = fetch_data()
+        new_data = fetch_data().copy()
 
         if new_data.empty:
             print("No new data fetched")
         else:
             print("New data fetched:")
-            print(new_data.tail())  # Print the latest fetched data for verification
+            #print(new_data.tail())  # Print the latest fetched data for verification
 
         data = pd.concat([data, new_data]).drop_duplicates()
+        # print("AHJSDIHASHDISAH", data)
         data.index = pd.to_datetime(data.index)
 
 
 
     # Function to update the plot
     def animate(i):
+        global data
         update_data()  # Fetch and update with new data
-        print(data)
+        print("THIS IS THE DATA IN ANIMATE: ", data)
 
         if not data.empty:
             ax1.clear()  # Clear the previous plot
@@ -630,24 +635,28 @@ def open_chart_window():
     def search_stock():
         # Get the stock ticker symbol from the TextBox and convert it to uppercase
         global ticker_symbol
+        global data
+        data = None
         ticker_symbol = stock_entry.text.upper()  # Use 'stock_entry.text' to retrieve the entered text
         print(f"Ticker Symbol entered: {ticker_symbol}")
     
-        data = fetch_data()  # Fetch the new stock data for the updated ticker symbol
+        data = fetch_data().copy()  # Fetch the new stock data for the updated ticker symbol
         if not data.empty:
             print(f"Fetched data for {ticker_symbol}")
         else:
             print(f"Failed to fetch data for {ticker_symbol}")
 
     # Create a stock search input and button
-    ax_stock_entry = fig.add_axes([0.35, 0.028, 0.25, 0.05])  # x, y, width, height for entry box
-    stock_entry = widgets.TextBox(ax_stock_entry, "Enter Stock:", initial=ticker_symbol)
-    ax_search_button = fig.add_axes([0.625, 0.028, 0.075, 0.05])  # x, y, width, height for search button
+    ax_stock_entry = fig.add_axes([0.82, 0.9, 0.1, 0.05])  # x, y, width, height for entry box
+    stock_entry = widgets.TextBox(ax_stock_entry, "Enter Stock:", initial="")
+    ax_search_button = fig.add_axes([0.92, 0.9, 0.05, 0.05])  # x, y, width, height for search button
     search_button = MplButton(ax_search_button, 'Search')
 
     # Define what happens when the search button is clicked
     def on_search_button_clicked(event):
         search_stock()
+        animate(i=1)
+        animate(i=60000)
 
     search_button.on_clicked(on_search_button_clicked)
 
