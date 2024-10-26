@@ -372,6 +372,7 @@ def open_menu_window():
 
 
 data = pd.DataFrame()
+ani = None
 
 def open_chart_window():
     # Create the figure and the plot for the chart window
@@ -388,14 +389,13 @@ def open_chart_window():
 
 
     # Stock ticker symbol (e.g., 'AMZN' for A)
-    global ticker_symbol
+    global ticker_symbol, data
     ticker_symbol = 'AMZN'
 
     # Create a function to fetch real-time data from Yahoo Finance
     def fetch_data():
         # Fetch the latest 1 day's worth of OHLC data with a 1-minute interval
         stock_data = yf.download(tickers=ticker_symbol, period='1d', interval='1m')
-        print(ticker_symbol)
     
         # Check if data is being fetched
         if stock_data.empty:
@@ -408,9 +408,6 @@ def open_chart_window():
         # Ensure the index is a DatetimeIndex
         stock_data.index = pd.to_datetime(stock_data.index)
     
-        ### DEBUG
-        print("Inside function:")
-        print(stock_data)
         return stock_data
 
     data = fetch_data().copy()
@@ -428,12 +425,9 @@ def open_chart_window():
 
         if new_data.empty:
             print("No new data fetched")
-        else:
-            print("New data fetched:")
-            #print(new_data.tail())  # Print the latest fetched data for verification
+            pass
 
         data = pd.concat([data, new_data]).drop_duplicates()
-        # print("AHJSDIHASHDISAH", data)
         data.index = pd.to_datetime(data.index)
 
 
@@ -442,7 +436,6 @@ def open_chart_window():
     def animate(i):
         global data
         update_data()  # Fetch and update with new data
-        print("THIS IS THE DATA IN ANIMATE: ", data)
 
         if not data.empty:
             ax1.clear()  # Clear the previous plot
@@ -638,7 +631,6 @@ def open_chart_window():
         global data
         data = None
         ticker_symbol = stock_entry.text.upper()  # Use 'stock_entry.text' to retrieve the entered text
-        print(f"Ticker Symbol entered: {ticker_symbol}")
     
         data = fetch_data().copy()  # Fetch the new stock data for the updated ticker symbol
         if not data.empty:
@@ -655,7 +647,6 @@ def open_chart_window():
     # Define what happens when the search button is clicked
     def on_search_button_clicked(event):
         search_stock()
-        animate(i=1)
         animate(i=60000)
 
     search_button.on_clicked(on_search_button_clicked)
