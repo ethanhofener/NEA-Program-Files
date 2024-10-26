@@ -386,7 +386,7 @@ def open_chart_window():
 
 
 
-
+    #help(yf.download)
 
     # Stock ticker symbol (e.g., 'AMZN' for A)
     global ticker_symbol, data
@@ -395,22 +395,24 @@ def open_chart_window():
     # Create a function to fetch real-time data from Yahoo Finance
     def fetch_data():
         # Fetch the latest 1 day's worth of OHLC data with a 1-minute interval
-        stock_data = yf.download(tickers=ticker_symbol, period='1d', interval='1m')
+        stock_data = yf.download(tickers=ticker_symbol, period='1d', interval='1m', auto_adjust=True, threads=True, actions=True)
     
         # Check if data is being fetched
         if stock_data.empty:
             print("No data fetched from Yahoo Finance. Please check your ticker symbol or internet connection.")
             return stock_data
-        
-        # Filter only the required OHLC columns
-        stock_data = stock_data[['Open', 'High', 'Low', 'Close']]
-    
-        # Ensure the index is a DatetimeIndex
-        stock_data.index = pd.to_datetime(stock_data.index)
     
         return stock_data
 
-    data = fetch_data().copy()
+
+
+    # Get only OHLC values
+    data = fetch_data()[['Open', 'High', 'Low', 'Close']].copy()
+
+    # Ensure the index is a DatetimeIndex
+    data.index = pd.to_datetime(data.index)
+
+
 
     # Check if data is empty at the start
     if data.empty:
